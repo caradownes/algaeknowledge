@@ -1,0 +1,13 @@
+name: algaeknowledge
+title: algaeknowledge
+username:
+account: algaeknowledge
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 326972
+bundleId: 1479578
+url: https://algaeknowledge.shinyapps.io/algaeknowledge/
+when: 1531503508.05831
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: 08-ambatchnb-210.xlsx
