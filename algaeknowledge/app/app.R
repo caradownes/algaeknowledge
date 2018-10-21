@@ -13,82 +13,25 @@
 
 
 #-----------------------Load Shiny Libraries------------------------------
+source("Prerequisites.R")
 
-#load the initial required shiny libraries
-library(shiny)
-library(shinydashboard)
-library(shinyjs)
-library(V8)
-
-#other packages that are required
-library(dplyr)
-library(tidyverse)
-
-#library(chron)
-library(datasets)
-library(dygraphs)
-library(ggplot2)
-library(DT)
-library(corrplot)
-library(psych)
-library(plot3D)
-library(scales)
-library(stargazer)
-library(xts)
-
-library(data.table)
-library(RColorBrewer)
-
-library(Hmisc)
-library(readxl)
-library(tidyxl)
-library(unpivotr)
-
-#-----------------------setting up DropBox for Shiny Apps io--------------
-
-library(rdrop2)
-library(httpuv)
-
-#save in the app itself
-token <- drop_auth()
-saveRDS(token, "droptoken.rds")
-
-#--------------------------------------
-#This is run once to generate the oAuth
-#      --DO NOT RUN--
-#token <- drop_auth(new_user = TRUE,
-#           key = "mmhfsybffdom42w",
-#           secret = "l8zeqqqgm1ne5z0",
-#           cache = TRUE, rdstoken = NA)
-#saveRDS(token, "droptoken.rds")
-#--------------------------------------
-
-
+#-----------------------Include Function Definitions----------------------
+source("dropBox.R")
+source("GUI.R")
 
 #-----------------------global settings-----------------------------------
 
 options(shiny.maxRequestSize = 30 * 1024 ^ 2)
 `%then%` <- shiny:::`%OR%`
 
-#-----------------------Set up the directory structure for the app--------
 
-#This is set up for DropBox as the storage for the data
-#setwd("algae")
-filenames  <- drop_dir(path = "algae") %>%
-  select("path_lower")
-xlsfilenames <- drop_dir(path = "algae") %>%
-  select("name")
-dashfilenames <- drop_dir(path = "algaedash") %>%
-  select("path_lower")
-outputDir <- "algae"
-expoutdir <- "algaeoutput"
-dashoutdir <- "algae"
+#-----------------------setting up DropBox for Shiny Apps io--------------
 
-#-------------------------------------------------------------------------
+#Save DropBox for authenticating sessions remotely.
+dropBox.InitToken()
 
-#-----------------------Helper Functions----------------------------------
-
-
+#Initialize DropBox file Input and Output
+dropBox.InitFileIO()
 
 
 #--------------------------------------------------------------------------------------------------
@@ -98,7 +41,7 @@ dashoutdir <- "algae"
 
 
 
-header <- dashboardHeader(title = "EASyR")
+header <- GUI.CreateDashboardHeader()
 
 #----------------------------Sidebar---------------------------------------------------------------
 sidebar <- dashboardSidebar(
@@ -445,7 +388,7 @@ body <-  dashboardBody(
                box(
                  width = 3,
                  h3("Define your data"),
-                 selectInput("xlsnames", "Select Data File to Munge", xlsfilenames, 
+                 selectInput("xlsnames", "Select Data File to Munge", dropBoxExcelFiles, 
                              selected = "08-AMBatchNB-210.xlsx"),
                  uiOutput("sheetnum"),
                  numericInput("rowstart", "Row Start", value = 19),
@@ -580,7 +523,7 @@ body <-  dashboardBody(
                     box(
                       width = 6,
                       title = "Choose Data File and Variables",
-                      selectInput("sgdat1", "Select A File to View", filenames,
+                      selectInput("sgdat1", "Select A File to View", dropBoxFilenames,
                                   selected = "/algaedash/asamplefile_gplotraft2015data.csv"),
                       uiOutput("gdatvarx"),
                       uiOutput("gdatvary")
@@ -638,7 +581,7 @@ body <-  dashboardBody(
                       ),
                     box(width = 4,
                         title = "Choose Your Data!",
-                        selectInput("sdydash1", "Select a Data File to View", filenames,
+                        selectInput("sdydash1", "Select a Data File to View", dropBoxFilenames,
                                     selected = "/algaedash/asamplefile_gplotraft2015data.csv"),
                         helpText("This Page Only Creates Time Series Plots.")
                     ),
@@ -706,7 +649,7 @@ body <-  dashboardBody(
                   fluidRow(
                     box(width = 6,
                         title = "Choose Data and Variable to View.",
-                        selectInput("sddat1", "Select A File to View", filenames,
+                        selectInput("sddat1", "Select A File to View", dropBoxFilenames,
                                     selected = "/algaedash/asamplefile_gplotraft2015data.csv"),
                         uiOutput("ddatvarx")
                     ),
@@ -771,7 +714,7 @@ body <-  dashboardBody(
                   fluidRow(
                     box(width = 6,
                         title = "Choose Your Data (Or Poison)",
-                        selectInput("shdat1", "Select A File to View", filenames,
+                        selectInput("shdat1", "Select A File to View", dropBoxFilenames,
                                     selected = "/algaedash/asamplefile_gplotraft2015data.csv"),
                         uiOutput("hdatvarx")
                     ),
@@ -821,7 +764,7 @@ body <-  dashboardBody(
                   fluidRow(
                     box(width = 6,
                         title = "Please Select a Data File and Variables",
-                        selectInput("sldat1", "Select A File to View", filenames,
+                        selectInput("sldat1", "Select A File to View", dropBoxFilenames,
                                     selected = "/algaedash/asamplefile_gplotraft2015data.csv"),
                         uiOutput("ldatvarx"),
                         uiOutput("ldatvary")
@@ -870,7 +813,7 @@ body <-  dashboardBody(
               box(
                          width = 12,
                          title = "OLS",
-                         selectInput("smlmdat", "Select Data File to View", filenames,
+                         selectInput("smlmdat", "Select Data File to View", dropBoxFilenames,
                                      selected = "/algaedash/asamplefile_gplotraft2015data.csv" )
                              
                            )
