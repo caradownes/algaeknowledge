@@ -43,6 +43,8 @@ dropBox.InitFileIO()
 
 header <- GUI.CreateDashboardHeader()
 
+#Debug area
+message("Here is the value of: ", dropBoxExcelFiles)
 #----------------------------Sidebar---------------------------------------------------------------
 sidebar <- dashboardSidebar(
   sidebarMenu(
@@ -524,7 +526,7 @@ body <-  dashboardBody(
                       width = 6,
                       title = "Choose Data File and Variables",
                       selectInput("sgdat1", "Select A File to View", dropBoxFilenames,
-                                  selected = "/algaedash/asamplefile_gplotraft2015data.csv"),
+                                  selected = "/dataFiles/csvFiles/asamplefile_gplotraft2015data.csv"),
                       uiOutput("gdatvarx"),
                       uiOutput("gdatvary")
                     ),
@@ -582,7 +584,7 @@ body <-  dashboardBody(
                     box(width = 4,
                         title = "Choose Your Data!",
                         selectInput("sdydash1", "Select a Data File to View", dropBoxFilenames,
-                                    selected = "/algaedash/asamplefile_gplotraft2015data.csv"),
+                                    selected = "/dataFiles/csvFiles/asamplefile_gplotraft2015data.csv"),
                         helpText("This Page Only Creates Time Series Plots.")
                     ),
                     box(width = 4,
@@ -650,7 +652,7 @@ body <-  dashboardBody(
                     box(width = 6,
                         title = "Choose Data and Variable to View.",
                         selectInput("sddat1", "Select A File to View", dropBoxFilenames,
-                                    selected = "/algaedash/asamplefile_gplotraft2015data.csv"),
+                                    selected = "/dataFiles/csvFiles/asamplefile_gplotraft2015data.csv"),
                         uiOutput("ddatvarx")
                     ),
                     box(width = 6,
@@ -715,7 +717,7 @@ body <-  dashboardBody(
                     box(width = 6,
                         title = "Choose Your Data (Or Poison)",
                         selectInput("shdat1", "Select A File to View", dropBoxFilenames,
-                                    selected = "/algaedash/asamplefile_gplotraft2015data.csv"),
+                                    selected = "/dataFiles/csvFiles/asamplefile_gplotraft2015data.csv"),
                         uiOutput("hdatvarx")
                     ),
                     box(width = 6,
@@ -765,7 +767,7 @@ body <-  dashboardBody(
                     box(width = 6,
                         title = "Please Select a Data File and Variables",
                         selectInput("sldat1", "Select A File to View", dropBoxFilenames,
-                                    selected = "/algaedash/asamplefile_gplotraft2015data.csv"),
+                                    selected = "/dataFiles/csvFiles/asamplefile_gplotraft2015data.csv"),
                         uiOutput("ldatvarx"),
                         uiOutput("ldatvary")
                     ),
@@ -814,7 +816,7 @@ body <-  dashboardBody(
                          width = 12,
                          title = "OLS",
                          selectInput("smlmdat", "Select Data File to View", dropBoxFilenames,
-                                     selected = "/algaedash/asamplefile_gplotraft2015data.csv" )
+                                     selected = "/dataFiles/csvFiles/asamplefile_gplotraft2015data.csv" )
                              
                            )
                          ),
@@ -951,7 +953,7 @@ server <- function(input, output, session) {
       sprintf("%s_%s.csv", as.integer(Sys.time()), digest::digest(data))
     filePath <- file.path(tempdir(), fileName)
     write.csv(data, filePath, row.names = FALSE, quote = TRUE)
-    drop_upload(filePath, path = expoutdir)
+    drop_upload(filePath, path = dropBoxExportOutputDir)
   }
   
   
@@ -963,7 +965,7 @@ server <- function(input, output, session) {
   
   # Load all previous responses
   exploadData <- function() {
-    filesInfo <- drop_dir(expoutdir)
+    filesInfo <- drop_dir(dropBoxExportOutputDir)
     filePaths <- filesInfo$path_lower
     data <- lapply(filePaths, drop_read_csv)
     data <- do.call(rbind, data)
@@ -1049,7 +1051,7 @@ server <- function(input, output, session) {
   #
   default_gdf <- reactive({
     df <-
-      drop_read_csv("/algaedash/asamplefile_gplotraft2015data.csv",
+      drop_read_csv("/dataFiles/csvFiles/asamplefile_gplotraft2015data.csv",
                     stringsAsFactors = FALSE)
     df <- na.omit(df)
   })
@@ -1119,7 +1121,7 @@ server <- function(input, output, session) {
   #Create a default dygraph to show while they select items
   
   default_ddf <- reactive({
-    df <- drop_read_csv("/algaedash/asamplefile_gplotraft2015data.csv",
+    df <- drop_read_csv("/dataFiles/csvFiles/asamplefile_gplotraft2015data.csv",
                         stringsAsFactors = FALSE)
     df <- na.omit(df) 
     df <- df %>%
@@ -1271,7 +1273,7 @@ server <- function(input, output, session) {
   #
   default_gdf <- reactive({
     df <-
-      drop_read_csv("/algaedash/asamplefile_gplotraft2015data.csv",
+      drop_read_csv("/dataFiles/csvFiles/asamplefile_gplotraft2015data.csv",
                     stringsAsFactors = FALSE)
     df <- na.omit(df)
   })
@@ -1367,7 +1369,7 @@ server <- function(input, output, session) {
   
   default_gdf <- reactive({
     df <-
-      drop_read_csv("/algaedash/asamplefile_gplotraft2015data.csv",
+      drop_read_csv("/dataFiles/csvFiles/asamplefile_gplotraft2015data.csv",
                     stringsAsFactors = FALSE)
     df <- na.omit(df)
   })
@@ -1492,7 +1494,7 @@ server <- function(input, output, session) {
   #Render the line plot object
   default_gdf <- reactive({
     df <-
-      drop_read_csv("/algaedash/asamplefile_gplotraft2015data.csv",
+      drop_read_csv("/dataFiles/csvFiles/asamplefile_gplotraft2015data.csv",
                     stringsAsFactors = FALSE)
     df <- na.omit(df)
   })
@@ -1617,7 +1619,7 @@ server <- function(input, output, session) {
   
   model_default <- reactive({
     
-    df <- drop_read_csv("/algaedash/asamplefile_gplotraft2015data.csv",
+    df <- drop_read_csv("/dataFiles/csvFiles/asamplefile_gplotraft2015data.csv",
                         stringsAsFactors = FALSE)
     df <- na.omit(df)
   })
