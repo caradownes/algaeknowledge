@@ -7,6 +7,12 @@
 #DEBUG CONSTANTS
 dropBoxAuthenticationError <- TRUE
 
+#Author: Zachary Lowery
+#Date: 10/23/2018
+#In the future we will want to bring all dropbox related functions 
+#into this source file. Or have dependencies sourced in the proper 
+#way. For now we are forced to use the '<<-' operator to affect
+#variables from parent environments.
 
 #Constants
 dropBoxDirectory <- "algae"
@@ -25,10 +31,10 @@ dropBoxDashFilenames <- 0
 dropBox.InitToken <- function(){ 
     
    if(dropBoxAuthenticationError){
-     token <- drop_auth(rdstoken = dropBoxTokenName)
+     token <<- drop_auth(rdstoken = dropBoxTokenName)
    }
    else{
-      token <- drop_auth()
+      token <<- drop_auth()
    }
    
    saveRDS(token, dropBoxTokenName)
@@ -61,11 +67,11 @@ dropBox.InitFileIO <- function(){
   
   #This is set up for DropBox as the storage for the data
   #setwd(dropBoxDirectory)
-  dropBoxFilenames  <- drop_dir(path = dropBoxDirectory) %>%
+  dropBoxFilenames  <<- drop_dir(path = dropBoxDirectory) %>%
     select("path_lower")
-  dropBoxExcelFiles <- drop_dir(path = dropBoxDirectory) %>%
+  dropBoxExcelFiles <<- drop_dir(path = dropBoxDirectory) %>%
     select("name")
-  dropBoxDashFilenames <- drop_dir(path = "algaedash") %>%
+  dropBoxDashFilenames <<- drop_dir(path = "algaedash") %>%
     select("path_lower")
 }
 
